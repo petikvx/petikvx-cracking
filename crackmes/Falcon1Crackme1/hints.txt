@@ -1,0 +1,10 @@
+You were either curious about what this file contains, or just couldn't reverse the crackme effectively and resorted to the hints??? :)
+So here they are(no, not the FBI but the hints) :
+1)Unpacking:The app isn't packed at all
+2)When you click a wrong button, you will get a message and then the app will be terminated(yeah, I know that you have already noticed that). However, if you click the correct button while having entered a wrong serial, no message will be displayed(the app will just close without telling you)...Now,if you want (and have the courage to open the app 84 times),you can start clicking all the buttons and see whether you get a message or not...
+3)Let me guess...You opened the crackme with OllyDbg and when you clicked 'Run' the app ran and terminated itself immediately...Hmmmm,set a breakpoint at the IsDebuggerPressent API and then patch the conditional jump after the call.
+4)The other way to beat the crackme is to create a dll file called 'biw.dll' that exports a proc called 'Patch_Falcon1'.Now,what this proc have to do in order to beat the crackme, I leave for you to find out...
+
+Good Luck again...
+
+Falcon1

@@ -1,0 +1,55 @@
+1) enlever le debugueur
+
+CPU Disasm
+Address   Hex dump             Command                                         Profile  Comments
+00401135  |.  E8 46080000      CALL <JMP.&KERNEL32.IsDebuggerPresent>          ;
+0040113A  |.  0BC0             OR EAX,EAX                                      ;
+0040113C  |.  74 07            JE SHORT 00401145                               ;
+0040113E  |.  6A 00            PUSH 0                                          ;
+00401140  |.  E8 1D080000      CALL <JMP.&KERNEL32.ExitProcess>                ;
+00401145  |> \B9 00000000      MOV ECX,0                                       ;
+0040114A  |>  51               /PUSH ECX                                       ;
+
+devient
+
+CPU Disasm
+Address   Hex dump             Command                                         Profile  Comments
+00401135      EB 0E            JMP SHORT 00401145                              ; Va sauter directement à la suite du programme
+00401137      90               NOP                                             ;
+00401138      90               NOP                                             ;
+00401139      90               NOP                                             ;
+0040113A  |.  0BC0             OR EAX,EAX                                      ;
+0040113C  |.  74 07            JE SHORT 00401145                               ;
+0040113E  |.  6A 00            PUSH 0                                          ;
+00401140  |.  E8 1D080000      CALL <JMP.&KERNEL32.ExitProcess>                ;
+00401145  |>  B9 00000000      MOV ECX,0                                       ;
+0040114A  |>  51               /PUSH ECX                                       ;
+0040114B  |.  8BD9             |MOV EBX,ECX                                    ;
+
+2) quel bouton est le bon
+
+CPU Disasm
+Address   Hex dump          Command                                  Profile  Comments
+00401643  |> \66:83F8 0D    CMP AX,0D                                ; => 13e bouton 
+00401647  |.  0F85 69020000 JNE 004018B6                             ; sinon saute vers le message "Wrong!!!!!!!!!!!!!!"
+
+3) pour avoir le bon mot de passe
+
+CPU Disasm
+Address   Hex dump          Command                                  Profile  Comments
+0040175A  |> \A3 4C324000   MOV DWORD PTR DS:[40324C],EAX            ;
+0040175F  |.  A3 54324000   MOV DWORD PTR DS:[403254],EAX            ;
+00401764  |.  FF35 54324000 PUSH DWORD PTR DS:[403254]               ;
+0040176A  |.  68 53304000   PUSH OFFSET 00403053                     ;           ASCII "%d"
+0040176F  |.  68 60324000   PUSH OFFSET 00403260                     ;
+00401774  |.  E8 89010000   CALL <JMP.&USER32.wsprintfA>             ;
+00401779  |.  83C4 0C       ADD ESP,0C                               ;
+0040177C  |.  58            POP EAX                                  ;
+0040177D  |.  C705 50324000 MOV DWORD PTR DS:[403250],539            ;
+00401787  |.  6A 00         PUSH 0                                   ;
+00401789  |.  8F05 58324000 POP DWORD PTR DS:[403258]                ;
+0040178F  |.  40            INC EAX                                  ;
+00401790  |.  BE 84314000   MOV ESI,OFFSET 00403184                  ;
+00401795  |.  EB 16         JMP SHORT 004017AD                       ;
+
+
